@@ -1,7 +1,0 @@
-..env.un~
-.env~
-.env 
-sample-env/
-**/*.pyc
-**/__pycache__
-__pycache__
