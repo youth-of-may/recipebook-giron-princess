@@ -4,10 +4,11 @@
 
 {% block content %}
     <h1>Recipe Book</h1>
+    <h3>{{ recipes.name }}</h3>
     <div>
         <ol>
             {% for ingredient in recipes.ingredients.all %}
-                <li>{{ ingredient.ingredients.name }}</li>
+                <li>{{ ingredient.ingredients.name }} : {{ ingredient.recipe_quantity }}</li>
             {% endfor %}
         </ol>
         <a href="{% url 'recipes' %}">Back To Homepage</a>
