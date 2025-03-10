@@ -6,6 +6,28 @@
         <title>{% block title %}Home{% endblock %}</title>
     </head>
     <body>
+        <header>
+            <h1>Recipe Book</h1>
+            {% block subheading %}
+                <h6>Home Page</h6>
+            {% endblock %}
+        </header>
+
+        {% if "accounts/login" not in request.path %}
+            {% if user.is_authenticated %}
+                <h4>Hi, {{ user.username }}!</h4>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        {% endif %}
+
+        <hr>
+
         {% block content %}
             <h1>Index</h1>
         {% endblock %}

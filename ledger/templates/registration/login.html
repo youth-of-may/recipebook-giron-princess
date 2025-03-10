@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block subheading %}
+    Login Page
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" name="next" value="{{ next|default:'/recipes/list' }}">
+            <button type="submit">Login</button>
+        </form>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Forgot Password?</a>
+{% endblock %}
