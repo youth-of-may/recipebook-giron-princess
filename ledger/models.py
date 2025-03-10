@@ -42,5 +42,5 @@ class Profile(models.Model):
     name = models.CharField(max_length=50)
     bio = models.TextField(
         blank=True,
-        validators=[MinLengthValidator(255, "the field must contain at least 250")],
+        validators=[MinLengthValidator(255, "the field must contain at least 255 characters.")],
     )
