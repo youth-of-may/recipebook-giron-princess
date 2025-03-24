@@ -1,14 +1,8 @@
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
-from django.contrib.auth.views import (
-    PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetConfirmView,
-)
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import Recipe
+from .forms import RecipeForm, RecipeImageForm
 
 
 def show_recipes(request):
@@ -19,26 +13,38 @@ def show_recipes(request):
 
 @login_required
 def show_ingredients(request, pk):
-    recipe = Recipe.objects.get(pk=pk)
+    recipe = get_object_or_404(Recipe, pk=pk)
     context = {"recipes": recipe}
     return render(request, "recipes/recipe-detail.html", context)
 
 
-class CustomView(LoginRequiredMixin, TemplateView):
-    template_name = "registration/login.html"
-    redirect_field_name = "accounts/login"
+@login_required
+def add_recipes(request):
+    form = RecipeForm()
+
+    if request.method == "POST":
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save()
+            return redirect("recipe-detail", pk=recipe.pk)
+
+    context = {"form": form}
+    return render(request, "recipes/recipe-add.html", context)
 
 
-class CustomPasswordReset(PasswordResetView):
-    template_name = "registration/password_reset_form.html"
-    email_template_name = "registration/password_reset_email.html"
-    success_url = "password_reset/done"
+@login_required
+def add_recipe_image(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
 
+    if request.method == "POST":
+        form = RecipeImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            image = form.save(commit=False)
+            image.recipe = recipe
+            image.save()
+            return redirect("recipe-detail", pk=recipe.pk)
+    else:
+        form = RecipeImageForm()
 
-class CustomPasswordResetDone(PasswordResetDoneView):
-    template_name = "registration/password_reset_done.html"
-
-
-class CustomPasswordResetConfirm(PasswordResetConfirmView):
-    template_name = "registration/password_reset_confirm.html"
-    success_url = "password_reset/complete"
+    context = {"form": form, "recipe": recipe}
+    return render(request, "recipes/recipe-add-image.html", context)
