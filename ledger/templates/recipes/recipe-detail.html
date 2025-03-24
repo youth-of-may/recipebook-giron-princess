@@ -11,7 +11,23 @@
 {% block content %}
     <h3>{{ recipes.name }}</h3>
     <h4>Created by <i>{{ recipes.author }}</i></h4>
+
     <div>
+        <h3>Recipe Images:</h3>
+        {% if recipes.recipe_image.all %}
+            {% for image in recipes.recipe_image.all %}
+                <img 
+                    style="max-width: 300px; max-height: 300px;" 
+                    src="{{ image.image.url }}" 
+                    alt="{{ image.description }}"
+                >
+                <br>
+            {% endfor %}
+        {% endif %}
+
+        <a href="{% url 'recipe-add-image' recipes.pk %}">Upload New Image</a>
+
+        <h3>Ingredients</h3>
         <ol>
             {% for ingredient in recipes.ingredients.all %}
                 <li>
@@ -19,6 +35,7 @@
                 </li>
             {% endfor %}
         </ol>
+
         <a href="{% url 'recipes' %}">Back To Homepage</a>
     </div>
-    {% endblock %}
+{% endblock %}

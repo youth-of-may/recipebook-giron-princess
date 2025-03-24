@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Recipe
+{% endblock %}
+
+{% block subheading %}
+    Recipe Adder Page
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+
+    <br>
+
+    <a href="{% url 'recipes' %}">Back to Recipes</a>
+{% endblock %}

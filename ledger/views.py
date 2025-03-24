@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Recipe
 from .forms import RecipeForm, RecipeImageForm
 
-
+@login_required
 def show_recipes(request):
     recipes = Recipe.objects.all()
     context = {"recipes": recipes}
