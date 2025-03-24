@@ -1,7 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
-from django.core.validators import MinLengthValidator
 
 
 class Recipe(models.Model):
@@ -37,10 +35,9 @@ class RecipeIngredient(models.Model):
     )
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    bio = models.TextField(
-        blank=True,
-        validators=[MinLengthValidator(255, "the field must contain at least 250")],
+class RecipeImage(models.Model):
+    image = models.ImageField(upload_to="images/")
+    description = models.TextField(max_length=255)
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name="recipe_image"
     )
